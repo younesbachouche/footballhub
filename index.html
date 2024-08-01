@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>YOUNES TV</title>
+  <link  rel="icon" href="https://i.imgur.com/Rxc5DZC.png"/>
+<link  rel="shortcut" href="https://i.imgur.com/Rxc5DZC.png"/>
+<link  rel="apple-touch-icon" href="https://i.imgur.com/Rxc5DZC.png"/>
+<meta content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no' name='viewport'/>
+<link  rel="icon" href="https://i.imgur.com/Rxc5DZC.png"/>
+<link  rel="shortcut" href="https://i.imgur.com/Rxc5DZC.png"/>
+<link  rel="apple-touch-icon" href="https://i.imgur.com/Rxc5DZC.png"/>
+  <meta name="description" 
+    content="Built by Algerian developer Younes Bachouche, YOUNES TV TV offers live football and sports streaming with top channels and seamless coverage.">
+  
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #f0f0f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .header {
+      background-color: #007bff;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      box-sizing: border-box;
+      position: relative;
+    }
+    .header h1 {
+      margin: 0;
+      text-align: center;
+      flex: 1;
+      font-size: 1.5rem;
+    }
+    .header .icon {
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: white;
+      transition: color 0.3s;
+    }
+    .header .icon:hover {
+      color: #007bff;
+    }
+    .header .previous-icon {
+      display: none; /* Removed previous icon */
+    }
+    .main {
+      flex-grow: 1;
+      padding: 20px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .main h1 {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .category-list, .channel-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    .category-card, .channel-card {
+      background-color: white;
+      border-radius: 28px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+      transition: transform 0.2s;
+      cursor: pointer;
+      width: 80%; /* Adjusted width to 80% */
+      max-width: 300px;
+      text-align: center;
+    }
+    .category-card img, .channel-card img {
+      width: 150px;
+      height: 100px;
+      margin-bottom: 10px;
+      object-fit: contain;
+    }
+    .category-card h3, .channel-card h3 {
+      font-size: 1.2em;
+      margin: 0;
+    }
+    .category-card:hover, .channel-card:hover {
+      transform: translateY(-5px);
+    }
+    .back-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .back-button:hover {
+      background-color: #0056b3;
+    }
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      background-color: rgba(0, 0, 0, 0.9);
+      color: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-sizing: border-box;
+      text-align: center;
+      z-index: 1000;
+      font-size: 1rem;
+    }
+    .popup .popup-text {
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+    }
+    .popup img {
+      width: 80px;
+      margin: 0 auto;
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="icon previous-icon" id="previousIcon">&#x2190;</div>
+    <h1>YOUNES TV</h1>
+    <div class="icon search-icon" id="searchIcon">&#x1F50D;</div>
+  </div>
+  <div class="main">
+    <h1>Select a Category</h1>
+    <div class="category-list" id="categoryList"></div>
+    <div class="channel-list" id="channelList" style="display: none;"></div>
+    <button class="back-button" id="backButton" style="display: none;">Back to Categories</button>
+  </div>
+  <div class="popup" id="popup">
+    <span class="close-btn" id="closePopup">&times;</span>
+    <div class="popup-text">VLC PLAYER IS REQUIRED TO PLAY CHANNELS</div>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e6/VLC_Icon.svg" alt="VLC Player">
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const categoryList = document.getElementById('categoryList');
+      const channelList = document.getElementById('channelList');
+      const backButton = document.getElementById('backButton');
+      const popup = document.getElementById('popup');
+      const closePopup = document.getElementById('closePopup');
+      const searchIcon = document.getElementById('searchIcon');
+
+      closePopup.addEventListener('click', () => {
+        popup.style.display = 'none';
+      });
+
+      searchIcon.addEventListener('click', () => {
+        const searchTerm = prompt('Enter channel name to search:');
+        if (searchTerm) {
+          const allChannelCards = document.querySelectorAll('.channel-card');
+          allChannelCards.forEach(card => {
+            const channelName = card.querySelector('h3').textContent.toLowerCase();
+            if (channelName.includes(searchTerm.toLowerCase())) {
+              card.style.display = 'block';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        }
+      });
+
+      const categories = [
+        {
+          name: "beIN Sports Channels",
+          image: "https://play-lh.googleusercontent.com/jBDZq3aBmCXuvtuJHEasqsdYPRxMBGzYmEha4dMlgoIk19Zlh6BGQC08Zt6Ifrmzhg",
+          channels: [
+            {
+              name: "beIN Sports 1",
+              image: "https://assets.bein.com/mena/sites/4/2015/06/beIN_SPORTS1_DIGITAL_Mono.png",
+              stream: "vlc://https://sportina.app/1-GHD/video.m3u8"
+            },
+            {
+              name: "beIN Sports 2",
+              image: "https://assets.bein.com/mena/sites/4/2021/02/beIN_SPORTS2_DIGITAL_Mono.png",
+              stream: "vlc://https://sportina.app/2-GHD/video.m3u8"
+            },
+            {
+              name: "beIN Sports 3",
+              image: "https://assets.bein.com/mena/sites/4/2015/06/beIN_SPORTS3_DIGITAL_Mono.png",
+              stream: "vlc://https://sportina.app/3-GHD/video.m3u8"
+            },
+            {
+              name: "beIN Sports 4",
+              image: "https://assets.bein.com/mena/sites/4/2015/06/beIN_SPORTS4_DIGITAL_Mono.png",
+              stream: "vlc://https://sportina.app/4-GHD/video.m3u8"
+            },
+            {
+              name: "beIN Sports 5",
+              image: "https://assets.bein.com/mena/sites/4/2015/06/beIN_SPORTS5_DIGITAL_Mono.png",
+              stream: "vlc://https://sahraapp.xyz/play/xLxmvmMZa57PmHg2PO-pWYFHFMo8z4l49S3brQEp2vM/ts"
+            }
+          ]
+        },
+        {
+          name: "SSC Channels",
+          image: "https://img.kooora.com/?i=o%2Fh%2F1%2F921%2Fssc1-hd-1.png",
+          channels: [
+            {
+              name: "SSC Channel 1",
+              image: "https://www.lyngsat.com/logo/tv/ss/ssc-1-sa.png",
+              stream: "vlc://https://sportina.app/ssc_1/video.m3u8"
+            },
+            {
+              name: "SSC Channel 2",
+              image: "https://www.lyngsat.com/logo/tv/ss/ssc-2-sa.png",
+              stream: "vlc://https://sportina.app/ssc_2/video.m3u8"
+            },
+            {
+              name: "SSC Channel 3",
+              image: "https://www.lyngsat.com/logo/tv/ss/ssc-3-sa.png",
+              stream: "vlc://https://sportina.app/ssc_3/video.m3u8"
+            },
+            {
+              name: "SSC Channel 4",
+              image: "https://www.lyngsat.com/logo/tv/ss/ssc-4-sa.png",
+              stream: "vlc://https://sportina.app/ssc_4/video.m3u8"
+            },
+            {
+              name: "SSC Channel 5",
+              image: "https://www.lyngsat.com/logo/tv/ss/ssc-5-sa.png",
+              stream: "vlc://https://sportina.app/ssc_5/video.m3u8"
+            },
+            {
+              name: "SSC Extra 1",
+              image: "https://www.lyngsat.com/logo/tv/ss/ssc-extra-1-sa.png",
+              stream: "vlc://https://sportina.app/ssc_extra_1/video.m3u8"
+            }
+          ]
+        },
+        {
+          name: "RMC Sport Channels",
+          image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_vvK-62dam_vJcmhKlOpRlgNUp_QTvpmhxQ&s",
+          channels: [
+            {
+				name: "RMC SPORT 1",
+          image: "https://www.lyngsat.com/logo/tv/rr/rmc-sport-1-fr.png",
+          stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/rmc%20sport%201.m3u8"
+        },
+        {
+          name: "RMC SPORT 2",
+          image: "https://www.lyngsat.com/logo/tv/rr/rmc-sport-2-fr.png",
+          stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/rmc%20sport%202.m3u8"
+        },
+            
+          ]
+        },
+        {
+          name: "beIN Sports France Channels",
+          image: "https://upload.wikimedia.org/wikipedia/commons/a/ad/BeIN_SPORTS_France_logo_2017.jpg",
+          channels: [
+            {
+				name: "beIN SPORT 1 FR",
+          image: "https://www.lyngsat.com/logo/tv/bb/bein-sports-1-qa-fr.png",
+          stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/bein%201%20fr.m3u8"
+        },
+        {
+          name: "beIN SPORT 2 FR",
+          image: "https://www.lyngsat.com/logo/tv/bb/bein-sports-2-qa-fr.png",
+          stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/bein%202%20fr.m3u8"
+        },
+        {
+          name: "beIN SPORT 3 FR",
+          image: "https://www.lyngsat.com/logo/tv/bb/bein-sports-3-qa-fr.png",
+          stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/bein%203%20fr.m3u8"
+        },
+          ]
+        },
+        {
+          name: "CANAL+ Channels",
+          image: "https://thumb.canalplus.pro/bran/unsafe/%7BresolutionXY%7D/image/6077ed035b0b1/uploads/media/CANALSAT.png",
+          channels: [
+            {
+              name: "CANAL+",
+               image: "https://www.lyngsat.com/logo/tv/cc/canal-plus-fr.png",
+          stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/CANAL%2B.m3u"
+            },
+            {
+				name: "CANAL+ SPORT",
+          image: "https://www.lyngsat.com/logo/tv/cc/canalplus_fr_sport.png",
+          stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/CANAL%2B%20SPORT.m3u"
+            },
+            {
+				name: "CANAL+ FOOT",
+          image: "https://www.lyngsat.com/logo/tv/cc/canal-plus-foot-fr.png",
+          stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/CANAL%2BFOOT.m3u"
+            },
+                   
+          ]
+        },
+		{
+          name: "SKY SPORTS ",
+          image: "https://logodownload.org/wp-content/uploads/2020/06/sky-sports-logo-5.png",
+          channels: [
+            {
+				name: "SKY SPORT FOOTBALL",
+          image: "https://www.lyngsat.com/logo/tv/ss/sky-sports-football-uk.svg",
+          stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/sky%20sport%20football.m3u8"
+        },
+        {
+          name: "SKY SPORTS PREMIER LEAGUE",
+          image: "https://www.lyngsat.com/logo/tv/ss/sky-sports-premier-league-uk.svg",
+          stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/sky%20pr.m3u8"
+        },
+                   
+          ]
+        },
+		{
+          name: "TNT SPORTS ",
+          image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7_nzGStv6nX6FuEt6h62fcVuKQnsMXNDidA&s",
+          channels: [
+            {
+                name: "TNT SPORTS 1",
+          image: "https://www.lyngsat.com/logo/tv/tt/tnt-sports-1-uk.png",
+          stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/tnt%20sport%201.m3u8"
+        },
+        {
+          name: "TNT SPORTS 2",
+          image: "https://www.lyngsat.com/logo/tv/tt/tnt-sports-2-uk.png",
+          stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/tnt%20sport%202.m3u8"
+        },
+        {
+          name: "TNT SPORTS 3",
+          image: "https://www.lyngsat.com/logo/tv/tt/tnt-sports-3-uk.png",
+          stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/tnt%20sport%203.m3u8"
+        },
+        {
+          name: "TNT SPORTS 4",
+          image: "https://www.lyngsat.com/logo/tv/tt/tnt-sports-4-uk.png",
+          stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/tnt%20sport%204.m3u8"
+        },
+        {
+          name: "PREMIER SPORTS 1",
+          image: "https://www.lyngsat.com/logo/tv/pp/premier-sports-1-ie.png",
+          stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/premiersports1.m3u8"
+        },
+        {
+          name: "PREMIER SPORTS 2",
+          image: "https://www.lyngsat.com/logo/tv/pp/premier-sports-2-ie.png",
+          stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/premiersports2.m3u8"
+        },
+                   
+          ]
+        },
+		{
+          name: "DAZN BAR , SP ",
+          image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/DAZN_Channel.svg/2560px-DAZN_Channel.svg.png",
+          channels: [
+            {
+				name: "DAZN BAR 1",
+          image: "https://www.lyngsat.com/logo/tv/dd/dazn-1-uk.svg",
+          stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/dazn%201%20bar.m3u8"
+        },
+        {
+          name: "DAZN BAR 2",
+          image: "https://www.lyngsat.com/logo/tv/dd/dazn-2-uk.svg",
+          stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/dazn%202%20bar.m3u8"
+        }
+                   
+          ]
+        },
+		{
+          name: "SPORT TV PT",
+          image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Logo_SportTV.svg/1280px-Logo_SportTV.svg.png",
+          channels: [
+            {
+				name: "SPORT 1 TV PR",
+          image: "https://www.lyngsat.com/logo/tv/ss/sport-tv-1-pt.png",
+          stream: "vlc://https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
+        },
+        {
+          name: "SPORT 2 TV PR",
+          image: "https://www.lyngsat.com/logo/tv/ss/sport-tv-2-pt.png",
+          stream: "vlc://https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
+        },
+        {
+          name: "SPORT 3 TV PR",
+          image: "https://www.lyngsat.com/logo/tv/ss/sport-tv-3-pt.png",
+          stream: "vlc://https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
+        },
+                   
+          ]
+        },
+		
+      ];
+
+      const loadCategories = () => {
+        categoryList.innerHTML = '';
+        channelList.style.display = 'none';
+        backButton.style.display = 'none';
+        categoryList.style.display = 'flex';
+
+        categories.forEach(category => {
+          const categoryCard = document.createElement('div');
+          categoryCard.classList.add('category-card');
+          categoryCard.innerHTML = `
+            <img src="${category.image}" alt="${category.name}">
+            <h3>${category.name}</h3>
+          `;
+          categoryCard.addEventListener('click', () => {
+            loadChannels(category);
+          });
+          categoryList.appendChild(categoryCard);
+        });
+
+        popup.style.display = 'flex';
+      };
+
+      const loadChannels = (category) => {
+        categoryList.innerHTML = '';
+        channelList.innerHTML = '';
+        categoryList.style.display = 'none';
+        channelList.style.display = 'flex';
+        backButton.style.display = 'block';
+
+        category.channels.forEach(channel => {
+          const channelCard = document.createElement('div');
+          channelCard.classList.add('channel-card');
+          channelCard.innerHTML = `
+            <img src="${channel.image}" alt="${channel.name}">
+            <h3>${channel.name}</h3>
+          `;
+          channelCard.addEventListener('click', () => {
+            window.open(channel.stream, '_blank');
+          });
+          channelList.appendChild(channelCard);
+        });
+      };
+
+      backButton.addEventListener('click', () => {
+        loadCategories();
+      });
+
+      loadCategories();
+    });
+  </script>
+</body>
+</html>
