@@ -4,15 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>YOUNES TV</title>
-  <link  rel="icon" href="https://i.imgur.com/Rxc5DZC.png"/>
-<link  rel="shortcut" href="https://i.imgur.com/Rxc5DZC.png"/>
-<link  rel="apple-touch-icon" href="https://i.imgur.com/Rxc5DZC.png"/>
-<meta content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no' name='viewport'/>
-<link  rel="icon" href="https://i.imgur.com/Rxc5DZC.png"/>
-<link  rel="shortcut" href="https://i.imgur.com/Rxc5DZC.png"/>
-<link  rel="apple-touch-icon" href="https://i.imgur.com/Rxc5DZC.png"/>
-  <meta name="description" 
-    content="Built by Algerian developer Younes Bachouche, YOUNES TV TV offers live football and sports streaming with top channels and seamless coverage.">
+  <link rel="icon" href="https://i.imgur.com/Rxc5DZC.png"/>
+  <link rel="shortcut icon" href="https://i.imgur.com/Rxc5DZC.png"/>
+  <link rel="apple-touch-icon" href="https://i.imgur.com/Rxc5DZC.png"/>
+  <meta content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no' name='viewport'/>
+  <link rel="icon" href="https://i.imgur.com/Rxc5DZC.png"/>
+  <link rel="shortcut icon" href="https://i.imgur.com/Rxc5DZC.png"/>
+  <link rel="apple-touch-icon" href="https://i.imgur.com/Rxc5DZC.png"/>
+  <meta name="description" content="Built by Algerian developer Younes Bachouche, YOUNES TV offers live football and sports streaming with top channels and seamless coverage.">
   
   <style>
     body {
@@ -22,34 +21,6 @@
       padding: 0;
       display: flex;
       flex-direction: column;
-    }
-    .header {
-      background-color: #007bff;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 20px;
-      box-sizing: border-box;
-      position: relative;
-    }
-    .header h1 {
-      margin: 0;
-      text-align: center;
-      flex: 1;
-      font-size: 1.5rem;
-    }
-    .header .icon {
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: white;
-      transition: color 0.3s;
-    }
-    .header .icon:hover {
-      color: #007bff;
-    }
-    .header .previous-icon {
-      display: none; /* Removed previous icon */
     }
     .main {
       flex-grow: 1;
@@ -145,13 +116,7 @@
   </style>
 </head>
 <body>
-  <div class="header">
-    <div class="icon previous-icon" id="previousIcon">&#x2190;</div>
-    <h1>YOUNES TV</h1>
-    <div class="icon search-icon" id="searchIcon">&#x1F50D;</div>
-  </div>
   <div class="main">
-    <h1>Select a Category</h1>
     <div class="category-list" id="categoryList"></div>
     <div class="channel-list" id="channelList" style="display: none;"></div>
     <button class="back-button" id="backButton" style="display: none;">Back to Categories</button>
@@ -168,30 +133,14 @@
       const backButton = document.getElementById('backButton');
       const popup = document.getElementById('popup');
       const closePopup = document.getElementById('closePopup');
-      const searchIcon = document.getElementById('searchIcon');
 
       closePopup.addEventListener('click', () => {
         popup.style.display = 'none';
       });
 
-      searchIcon.addEventListener('click', () => {
-        const searchTerm = prompt('Enter channel name to search:');
-        if (searchTerm) {
-          const allChannelCards = document.querySelectorAll('.channel-card');
-          allChannelCards.forEach(card => {
-            const channelName = card.querySelector('h3').textContent.toLowerCase();
-            if (channelName.includes(searchTerm.toLowerCase())) {
-              card.style.display = 'block';
-            } else {
-              card.style.display = 'none';
-            }
-          });
-        }
-      });
-
       const categories = [
         {
-          name: "beIN Sports Channels",
+			name: "beIN Sports Channels",
           image: "https://play-lh.googleusercontent.com/jBDZq3aBmCXuvtuJHEasqsdYPRxMBGzYmEha4dMlgoIk19Zlh6BGQC08Zt6Ifrmzhg",
           channels: [
             {
@@ -413,54 +362,63 @@
 		
       ];
 
-      const loadCategories = () => {
+      function createCategoryCard(category) {
+        const card = document.createElement('div');
+        card.classList.add('category-card');
+        card.innerHTML = `
+          <img src="${category.image}" alt="${category.name}">
+          <h3>${category.name}</h3>
+        `;
+        card.addEventListener('click', () => {
+          showChannels(category.channels);
+        });
+        return card;
+      }
+
+      function showCategories() {
         categoryList.innerHTML = '';
+        categories.forEach(category => {
+          const card = createCategoryCard(category);
+          categoryList.appendChild(card);
+        });
+        categoryList.style.display = 'flex';
         channelList.style.display = 'none';
         backButton.style.display = 'none';
-        categoryList.style.display = 'flex';
+      }
 
-        categories.forEach(category => {
-          const categoryCard = document.createElement('div');
-          categoryCard.classList.add('category-card');
-          categoryCard.innerHTML = `
-            <img src="${category.image}" alt="${category.name}">
-            <h3>${category.name}</h3>
-          `;
-          categoryCard.addEventListener('click', () => {
-            loadChannels(category);
-          });
-          categoryList.appendChild(categoryCard);
+      function createChannelCard(channel) {
+        const card = document.createElement('div');
+        card.classList.add('channel-card');
+        card.innerHTML = `
+          <img src="${channel.image}" alt="${channel.name}">
+          <h3>${channel.name}</h3>
+        `;
+        card.addEventListener('click', () => {
+          window.location.href = channel.stream;
         });
+        return card;
+      }
 
-        popup.style.display = 'flex';
-      };
-
-      const loadChannels = (category) => {
-        categoryList.innerHTML = '';
+      function showChannels(channels) {
         channelList.innerHTML = '';
+        channels.forEach(channel => {
+          const card = createChannelCard(channel);
+          channelList.appendChild(card);
+        });
         categoryList.style.display = 'none';
         channelList.style.display = 'flex';
         backButton.style.display = 'block';
+      }
 
-        category.channels.forEach(channel => {
-          const channelCard = document.createElement('div');
-          channelCard.classList.add('channel-card');
-          channelCard.innerHTML = `
-            <img src="${channel.image}" alt="${channel.name}">
-            <h3>${channel.name}</h3>
-          `;
-          channelCard.addEventListener('click', () => {
-            window.open(channel.stream, '_blank');
-          });
-          channelList.appendChild(channelCard);
-        });
-      };
+      backButton.addEventListener('click', showCategories);
 
-      backButton.addEventListener('click', () => {
-        loadCategories();
+      showCategories();
+
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          popup.style.display = 'block';
+        }, 1000);
       });
-
-      loadCategories();
     });
   </script>
 </body>
