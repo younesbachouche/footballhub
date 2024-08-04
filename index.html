@@ -4,15 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>YOUNES TV</title>
-  <link rel="icon" href="https://i.imgur.com/Rxc5DZC.png"/>
-  <link rel="shortcut icon" href="https://i.imgur.com/Rxc5DZC.png"/>
-  <link rel="apple-touch-icon" href="https://i.imgur.com/Rxc5DZC.png"/>
-  <meta content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no' name='viewport'/>
-  <link rel="icon" href="https://i.imgur.com/Rxc5DZC.png"/>
-  <link rel="shortcut icon" href="https://i.imgur.com/Rxc5DZC.png"/>
-  <link rel="apple-touch-icon" href="https://i.imgur.com/Rxc5DZC.png"/>
-  <meta name="description" content="Built by Algerian developer Younes Bachouche, YOUNES TV offers live football and sports streaming with top channels and seamless coverage.">
-  
+  <link  rel="icon" href="https://i.imgur.com/Rxc5DZC.png"/>
+<link  rel="shortcut" href="https://i.imgur.com/Rxc5DZC.png"/>
+<link  rel="apple-touch-icon" href="https://i.imgur.com/Rxc5DZC.png"/>
+<meta content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no' name='viewport'/>
+<link  rel="icon" href="https://i.imgur.com/Rxc5DZC.png"/>
+<link  rel="shortcut" href="https://i.imgur.com/Rxc5DZC.png"/>
+<link  rel="apple-touch-icon" href="https://i.imgur.com/Rxc5DZC.png"/>
+  <meta name="description" 
+    content="Built by Algerian developer Younes Bachouche, YOUNES TV TV offers live football and sports streaming with top channels and seamless coverage.">
+
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -22,6 +23,7 @@
       display: flex;
       flex-direction: column;
     }
+    
     .main {
       flex-grow: 1;
       padding: 20px;
@@ -116,7 +118,11 @@
   </style>
 </head>
 <body>
+  <div class="header">
+    
+  </div>
   <div class="main">
+    
     <div class="category-list" id="categoryList"></div>
     <div class="channel-list" id="channelList" style="display: none;"></div>
     <button class="back-button" id="backButton" style="display: none;">Back to Categories</button>
@@ -132,11 +138,13 @@
       const channelList = document.getElementById('channelList');
       const backButton = document.getElementById('backButton');
       const popup = document.getElementById('popup');
-      const closePopup = document.getElementById('closePopup');
+      
 
       closePopup.addEventListener('click', () => {
         popup.style.display = 'none';
       });
+
+     
 
       const categories = [
         {
@@ -164,20 +172,23 @@
               stream: "vlc://https://sportina.app/4-GHD/video.m3u8"
             },
             {
-               name: "beIN Sports 5",
+              name: "beIN Sports 5",
               image: "https://assets.bein.com/mena/sites/4/2015/06/beIN_SPORTS5_DIGITAL_Mono.png",
-              stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/beIN%20SPORTS%205.m3u"
-            }
-		 {
+              stream: "vlc://https://sahraapp.xyz/play/xLxmvmMZa57PmHg2PO-pWYFHFMo8z4l49S3brQEp2vM/ts"
+            },
+            {
               name: "beIN Sports 6",
-              image: "https://assets.bein.com/mena/sites/4/2015/06/beIN_SPORTS6_DIGITAL_Mono.png",
+              image: "https://img.kooora.com/?i=o%2Fh%2F1%2F206%2Fbein-sports-hd-1.png",
               stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/beIN%20SPORTS%206.m3u"
-            }
+            },
 		 {
               name: "beIN Sports 7",
               image: "https://assets.bein.com/mena/sites/4/2015/06/beIN_SPORTS7_DIGITAL_Mono.png",
               stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/beIN%20SPORTS%207.m3u"
         
+        },
+            
+          ]
         },
         {
           name: "SSC Channels",
@@ -229,7 +240,7 @@
           image: "https://www.lyngsat.com/logo/tv/rr/rmc-sport-2-fr.png",
           stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/rmc%20sport%202.m3u8"
         },
-            
+
           ]
         },
         {
@@ -272,7 +283,7 @@
           image: "https://www.lyngsat.com/logo/tv/cc/canal-plus-foot-fr.png",
           stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/CANAL%2BFOOT.m3u"
             },
-                   
+
           ]
         },
 		{
@@ -289,7 +300,7 @@
           image: "https://www.lyngsat.com/logo/tv/ss/sky-sports-premier-league-uk.svg",
           stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/sky%20pr.m3u8"
         },
-                   
+
           ]
         },
 		{
@@ -326,7 +337,7 @@
           image: "https://www.lyngsat.com/logo/tv/pp/premier-sports-2-ie.png",
           stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/premiersports2.m3u8"
         },
-                   
+
           ]
         },
 		{
@@ -343,7 +354,7 @@
           image: "https://www.lyngsat.com/logo/tv/dd/dazn-2-uk.svg",
           stream: "vlc://https://raw.githubusercontent.com/younesbachouche/Younes-serv/main/dazn%202%20bar.m3u8"
         }
-                   
+
           ]
         },
 		{
@@ -365,69 +376,60 @@
           image: "https://www.lyngsat.com/logo/tv/ss/sport-tv-3-pt.png",
           stream: "vlc://https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
         },
-                   
+
           ]
         },
-		
+
       ];
 
-      function createCategoryCard(category) {
-        const card = document.createElement('div');
-        card.classList.add('category-card');
-        card.innerHTML = `
-          <img src="${category.image}" alt="${category.name}">
-          <h3>${category.name}</h3>
-        `;
-        card.addEventListener('click', () => {
-          showChannels(category.channels);
-        });
-        return card;
-      }
-
-      function showCategories() {
+      const loadCategories = () => {
         categoryList.innerHTML = '';
-        categories.forEach(category => {
-          const card = createCategoryCard(category);
-          categoryList.appendChild(card);
-        });
-        categoryList.style.display = 'flex';
         channelList.style.display = 'none';
         backButton.style.display = 'none';
-      }
+        categoryList.style.display = 'flex';
 
-      function createChannelCard(channel) {
-        const card = document.createElement('div');
-        card.classList.add('channel-card');
-        card.innerHTML = `
-          <img src="${channel.image}" alt="${channel.name}">
-          <h3>${channel.name}</h3>
-        `;
-        card.addEventListener('click', () => {
-          window.location.href = channel.stream;
+        categories.forEach(category => {
+          const categoryCard = document.createElement('div');
+          categoryCard.classList.add('category-card');
+          categoryCard.innerHTML = `
+            <img src="${category.image}" alt="${category.name}">
+            <h3>${category.name}</h3>
+          `;
+          categoryCard.addEventListener('click', () => {
+            loadChannels(category);
+          });
+          categoryList.appendChild(categoryCard);
         });
-        return card;
-      }
 
-      function showChannels(channels) {
+        popup.style.display = 'flex';
+      };
+
+      const loadChannels = (category) => {
+        categoryList.innerHTML = '';
         channelList.innerHTML = '';
-        channels.forEach(channel => {
-          const card = createChannelCard(channel);
-          channelList.appendChild(card);
-        });
         categoryList.style.display = 'none';
         channelList.style.display = 'flex';
         backButton.style.display = 'block';
-      }
 
-      backButton.addEventListener('click', showCategories);
+        category.channels.forEach(channel => {
+          const channelCard = document.createElement('div');
+          channelCard.classList.add('channel-card');
+          channelCard.innerHTML = `
+            <img src="${channel.image}" alt="${channel.name}">
+            <h3>${channel.name}</h3>
+          `;
+          channelCard.addEventListener('click', () => {
+            window.open(channel.stream, '_blank');
+          });
+          channelList.appendChild(channelCard);
+        });
+      };
 
-      showCategories();
-
-      window.addEventListener('load', () => {
-        setTimeout(() => {
-          popup.style.display = 'block';
-        }, 1000);
+      backButton.addEventListener('click', () => {
+        loadCategories();
       });
+
+      loadCategories();
     });
   </script>
 </body>
